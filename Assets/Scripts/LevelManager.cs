@@ -15,7 +15,10 @@ public class LevelManager : Singleton<LevelManager>
     private List<bool> isGridFree;
 
     // Start is called before the first frame update
-    void Start()
+
+
+
+     void Start()
     {
         //gameObject.AddComponent<Graph>();
         //LinkedList<GameObject> Path = new LinkedList<GameObject>();

@@ -51,7 +51,11 @@ public class Spawner : Singleton<Spawner>
     // Update is called once per frame
     void Update()
     {
-        
+        GameObject []g = carsInYellowLine.ToArray();
+        for (int i = 0; i < g.Length; i++)
+        {
+            Debug.Log(g[i]);
+        }
     }
 
     private void OnEnable()
@@ -71,22 +75,34 @@ public class Spawner : Singleton<Spawner>
     private IEnumerator doFirstMoveForWaitingYellow(float fl)
     {
         yield return new WaitForSeconds(fl);
+        
+
+        
         GameObject ga = carsInYellowLine.Dequeue();
         GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
         List<GameObject> grids = LevelManager.Instance.GetGridList();
         List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
 
-        if (gridStatuses[12])
+        //if (gridStatuses[12])
+        // {
+        //ga.transform.DOMove(ga.transform.position, 0f).SetDelay(fl);
+        Car c = ga.GetComponent<Car>();
+        if (c.currentGrid!=-2)
         {
-            //ga.transform.DOMove(ga.transform.position, 0f).SetDelay(fl);
-            ga.transform.DOMove(grids[12].transform.position, 2f);
-            Car c = ga.GetComponent<Car>();
+
+
+            ga.transform.DOMove(grids[12].transform.position, 1f);
+
             c.SetCurrentGrid(12);
             LevelManager.Instance.SetGridBusy(12);
 
 
+            //}
+            newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 1f).OnComplete(() => CreateYellowCar(spawnPosYellow2.position));
+
+            MoveManager.Instance.moveTheCar(ga);
         }
-        newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 1f).OnComplete(() => CreateYellowCar(spawnPosYellow2.position));
+            
     }
 
     private void HandlePurpleMovement(float fl)
@@ -107,17 +123,20 @@ public class Spawner : Singleton<Spawner>
         List<GameObject> grids = LevelManager.Instance.GetGridList();
         List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
 
-        if (gridStatuses[11])
-        {
+       // if (gridStatuses[11])
+        //{
             //ga.transform.DOMove(ga.transform.position, 0f).SetDelay(fl);
-            ga.transform.DOMove(grids[11].transform.position, 2f);
+            ga.transform.DOMove(grids[11].transform.position, 1f);
 
             Car c = ga.GetComponent<Car>();
             c.SetCurrentGrid(11);
             LevelManager.Instance.SetGridBusy(11);
 
-        }
+       // }
         newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
+        MoveManager.Instance.moveTheCar(ga);
+
+
 
     }
 

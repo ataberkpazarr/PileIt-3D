@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8358662362907522724}
   - component: {fileID: 3224781131661111411}
   - component: {fileID: -4520660530209203038}
+  - component: {fileID: 5046565501076393525}
+  - component: {fileID: 6610862448298057548}
   m_Layer: 0
   m_Name: Car2Purple
   m_TagString: Untagged
@@ -100,3 +102,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ebaa44975c6c4a45b17404eac4a5107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentGrid: 0
+--- !u!54 &5046565501076393525
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006403204355993263}
+  serializedVersion: 2
+  m_Mass: 1000
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &6610862448298057548
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006403204355993263}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 45.77839, y: 69.56073, z: 53.004738}
+  m_Center: {x: 0.08628463, y: -0.6714861, z: 16.070848}
