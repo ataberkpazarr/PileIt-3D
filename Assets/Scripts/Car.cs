@@ -13,6 +13,7 @@ public class Car : MonoBehaviour
     public List<int>[] adjacencyList;
     List<GameObject> grids;
 
+    private Vector3 currentTarget = Vector3.zero;
     /*
     public Car (Vector3 pos)
     {
@@ -21,6 +22,8 @@ public class Car : MonoBehaviour
     }*/
 
     // Start is called before the first frame update
+
+      
     void Start()
     {
         //currentGrid = -1;
@@ -36,14 +39,38 @@ public class Car : MonoBehaviour
         //gameObject.transform.DOMove(target, 0.5f);
     }
 
+    private void FixedUpdate()
+    {
+        /*
+        if (currentTarget!=Vector3.zero)
+        {
+
+            Vector3 aimDirectionToBe = (currentTarget-transform.position).normalized;
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, aimDirectionToBe, Time.deltaTime * 1f, 0.0f);
+
+            // Draw a ray pointing at our target in
+            //7Debug.DrawRay(transform.position, newDirection, Color.red);
+
+            // Calculate a rotation a step closer to the target and applies rotation to this object
+            transform.localRotation = Quaternion.LookRotation(newDirection);
+        }*/
+
+    }
+
     // Update is called once per frame
    
-
+    
     private void OnEnable()
     {
         //YellowButton.yellowObstacleOpened += HandleYellowMovement;
         //PurpleButton.purpleObstacleOpened += HandlePurpleMovement;
 
+    }
+
+    public void SetCurrentTarget(Vector3 vec)
+    {
+
+        currentTarget = vec;
     }
 
     public void GoTargetPosition(Vector3 vec)

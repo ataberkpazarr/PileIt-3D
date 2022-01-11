@@ -51,12 +51,15 @@ public class Spawner : Singleton<Spawner>
     // Update is called once per frame
     void Update()
     {
-        GameObject []g = carsInYellowLine.ToArray();
-        for (int i = 0; i < g.Length; i++)
-        {
-            Debug.Log(g[i]);
-        }
+       
     }
+
+    public Vector3 GetInitialQuaternion()
+    {
+        return carsInYellowLine.Peek().transform.position;
+        //return carsInYellowLine.Peek().transform.rotation;
+    }
+
 
     private void OnEnable()
     {
@@ -91,7 +94,7 @@ public class Spawner : Singleton<Spawner>
         {
 
 
-            ga.transform.DOMove(grids[12].transform.position, 1f);
+            ga.transform.DOMove(grids[12].transform.position, 0.25f).SetEase(Ease.InOutSine);
 
             c.SetCurrentGrid(12);
             LevelManager.Instance.SetGridBusy(12);
@@ -100,9 +103,11 @@ public class Spawner : Singleton<Spawner>
             //}
             newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 1f).OnComplete(() => CreateYellowCar(spawnPosYellow2.position));
 
-            MoveManager.Instance.moveTheCar(ga);
+            //MoveManager.Instance.moveTheCar(ga);
+            MoveManager.Instance.MoveTheCar(ga);
+
         }
-            
+
     }
 
     private void HandlePurpleMovement(float fl)
@@ -126,7 +131,7 @@ public class Spawner : Singleton<Spawner>
        // if (gridStatuses[11])
         //{
             //ga.transform.DOMove(ga.transform.position, 0f).SetDelay(fl);
-            ga.transform.DOMove(grids[11].transform.position, 1f);
+            ga.transform.DOMove(grids[11].transform.position, 0.25f).SetEase(Ease.InOutSine);
 
             Car c = ga.GetComponent<Car>();
             c.SetCurrentGrid(11);
@@ -134,7 +139,9 @@ public class Spawner : Singleton<Spawner>
 
        // }
         newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
-        MoveManager.Instance.moveTheCar(ga);
+        //MoveManager.Instance.moveTheCar(ga);
+        MoveManager.Instance.MoveTheCar(ga);
+
 
 
 
