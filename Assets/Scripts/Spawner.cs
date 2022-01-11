@@ -52,11 +52,12 @@ public class Spawner : Singleton<Spawner>
     bool notFinishedYet = true;
     void Update()
     {
+        /*
         if (totalSpawnedNumberYellow==SpawnLimitYellow && totalSpawnedNumberPurple==SpawnLimitPurple&&notFinishedYet)
         {
             reachedToTotalNumberOfCarLimit.Invoke();
             notFinishedYet = false;
-        }
+        }*/
     }
 
  
@@ -67,6 +68,11 @@ public class Spawner : Singleton<Spawner>
         YellowButton.yellowObstacleOpened += HandleYellowMovement;
         PurpleButton.purpleObstacleOpened += HandlePurpleMovement;
 
+    }
+    private void OnDisable()
+    {
+        YellowButton.yellowObstacleOpened -= HandleYellowMovement;
+        PurpleButton.purpleObstacleOpened -= HandlePurpleMovement;
     }
 
     private void HandleYellowMovement(float fl)
@@ -91,13 +97,19 @@ public class Spawner : Singleton<Spawner>
         c.SetCurrentGrid(12);
         LevelManager.Instance.SetGridBusy(12);
 
-
-        if (totalSpawnedNumberYellow != SpawnLimitYellow)
+       
+         if (totalSpawnedNumberYellow != SpawnLimitYellow)
         {
             GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
             newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 1f).OnComplete(() => CreateYellowCar(spawnPosYellow2.position));
 
         }
+        /*
+        else
+        {
+            GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
+            newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 0.2f);
+        }*/
         MoveManager.Instance.MoveTheCar(ga);
 
     }
@@ -121,11 +133,18 @@ public class Spawner : Singleton<Spawner>
             c.SetCurrentGrid(14);
             LevelManager.Instance.SetGridBusy(14);
 
-        if (totalSpawnedNumberPurple!= SpawnLimitPurple)
+     
+         if (totalSpawnedNumberPurple!= SpawnLimitPurple)
         {
             GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
             newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
         }
+        /*
+        else
+        {
+            GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
+            newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 0.2f);
+        }*/
 
         MoveManager.Instance.MoveTheCar(ga);
 
@@ -165,6 +184,16 @@ public class Spawner : Singleton<Spawner>
             GameManager.Instance.AddSpawnedCarsList(gg);
         }
     }
+
+    public int GetSpawnLimitYellow()
+    {
+        return SpawnLimitYellow;
+    }
+    public int GetSpawnLimitPurple()
+    {
+        return SpawnLimitPurple;
+    }
+
 
 
 }

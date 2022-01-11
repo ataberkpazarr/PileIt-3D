@@ -7,6 +7,7 @@ using System;
 
 public class MoveManager : Singleton<MoveManager>
 {
+    public static Action checkIfGameEnded;
 
     public List<int>[] adjacencyList;
     List<GameObject> grids;
@@ -74,6 +75,7 @@ public class MoveManager : Singleton<MoveManager>
             }
 
             tick.SetActive(true);
+            checkIfGameEnded?.Invoke();
         }
 
         else if (car_.gameObject.tag == "FirstColor" && LevelManager.Instance.GetColorOfGrid(c.currentGrid) == "F")
@@ -86,6 +88,8 @@ public class MoveManager : Singleton<MoveManager>
             }
 
             tick.SetActive(true);
+            checkIfGameEnded?.Invoke();
+
         }
 
         else

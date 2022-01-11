@@ -63,8 +63,15 @@ public class LevelManager : Singleton<LevelManager>
 
     public string GetColorOfGrid(int i)
     {
+        if ((i==0 || i>0) && i<gridColors.Count)
+        {
+            return gridColors[i];
 
-        return gridColors[i];
+        }
+        else
+        {
+            return "N";
+        }
     }
     public void SetGridFree(int i)
     {

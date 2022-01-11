@@ -40,7 +40,7 @@ public class PurpleButton : MonoBehaviour
             purpleObstacleAnim.SetBool("ButtonClicked", true);
 
 
-            purpleObstacleOpened.Invoke(obstacleOpeningAnim.length);
+            purpleObstacleOpened?.Invoke(obstacleOpeningAnim.length);
             Invoke("EndClickAnimation", buttonClickedAnim.length - 0.5f);
             Invoke("EndObstacleAnimation", obstacleOpeningAnim.length+0.1f);
 

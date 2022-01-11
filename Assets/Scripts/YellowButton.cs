@@ -34,7 +34,7 @@ public class YellowButton : MonoBehaviour
             anim.SetBool("ButtonClicked", true);
 
             yellowObstacleAnim.SetBool("ButtonClicked", true);
-            yellowObstacleOpened.Invoke(obstacleOpeningAnim.length);
+            yellowObstacleOpened?.Invoke(obstacleOpeningAnim.length);
 
             Invoke("EndClickAnimation", buttonClickedAnim.length - 0.5f);
             Invoke("EndObstacleAnimation", obstacleOpeningAnim.length + 0.1f);
