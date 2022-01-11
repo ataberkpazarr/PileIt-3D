@@ -12,7 +12,7 @@ public class Graph
     { 
 
         // Creating a graph with 12 vertices
-        int V = 13;
+        int V = 15;
         List<int>[] adj = new List<int>[V];
 
         for (int i = 0; i < V; i++)
@@ -45,8 +45,11 @@ public class Graph
         addEdge(adj, 9, 10);
         addEdge(adj, 10, 0);
         addEdge(adj, 11, 0);
-        addEdge(adj, 12, 5);
-        addEdge(adj, 12, 9);
+        addEdge(adj, 12, 13);
+        addEdge(adj, 13, 5);
+        addEdge(adj, 13, 9);
+        addEdge(adj, 14, 11);
+
 
         //printGraph(adj);
         adjacencyList = adj;

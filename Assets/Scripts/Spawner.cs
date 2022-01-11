@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class Spawner : Singleton<Spawner>
 {
@@ -15,20 +16,26 @@ public class Spawner : Singleton<Spawner>
 
     [SerializeField] private GameObject yellowCarPrefab;
     [SerializeField] private GameObject purpleCarPrefab;
+    [SerializeField] private int SpawnLimitYellow;
+    [SerializeField] private int SpawnLimitPurple;
 
 
+
+    private int totalSpawnedNumberPurple;
+    private int totalSpawnedNumberYellow;
 
     private Queue<GameObject> carsInYellowLine;
     private Queue<GameObject> carsInPurpleLine;
 
-
+    public static Action reachedToTotalNumberOfCarLimit;
    
-    // Start is called before the first frame update
     void Start()
     {
-        
-        
-        
+
+        totalSpawnedNumberPurple = 0;
+        totalSpawnedNumberYellow = 0;
+
+
 
         carsInYellowLine = new Queue<GameObject>();
         carsInPurpleLine = new Queue<GameObject>();
@@ -39,26 +46,20 @@ public class Spawner : Singleton<Spawner>
         CreatePurpleCar(spawnPosPurple.position);
         CreatePurpleCar(spawnPosPurple2.position);
 
-        /*
-        CreateYellowCar(new Vector3 (2,2,2));
-        CreateYellowCar(new Vector3(2, 2, 2));
-
-        CreatePurpleCar(new Vector3(2, 2, 2));
-        CreatePurpleCar(new Vector3(2, 2, 2));
-        */
+  
     }
 
-    // Update is called once per frame
+    bool notFinishedYet = true;
     void Update()
     {
-       
+        if (totalSpawnedNumberYellow==SpawnLimitYellow && totalSpawnedNumberPurple==SpawnLimitPurple&&notFinishedYet)
+        {
+            reachedToTotalNumberOfCarLimit.Invoke();
+            notFinishedYet = false;
+        }
     }
 
-    public Vector3 GetInitialQuaternion()
-    {
-        return carsInYellowLine.Peek().transform.position;
-        //return carsInYellowLine.Peek().transform.rotation;
-    }
+ 
 
 
     private void OnEnable()
@@ -66,13 +67,11 @@ public class Spawner : Singleton<Spawner>
         YellowButton.yellowObstacleOpened += HandleYellowMovement;
         PurpleButton.purpleObstacleOpened += HandlePurpleMovement;
 
-
     }
 
     private void HandleYellowMovement(float fl)
     {
         StartCoroutine(doFirstMoveForWaitingYellow(fl));
-        //CreateYellowCar(spawnPosYellow2.position);
     }
 
     private IEnumerator doFirstMoveForWaitingYellow(float fl)
@@ -82,89 +81,89 @@ public class Spawner : Singleton<Spawner>
 
         
         GameObject ga = carsInYellowLine.Dequeue();
-        GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
+        
         List<GameObject> grids = LevelManager.Instance.GetGridList();
         List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
 
-        //if (gridStatuses[12])
-        // {
-        //ga.transform.DOMove(ga.transform.position, 0f).SetDelay(fl);
+
         Car c = ga.GetComponent<Car>();
-        if (c.currentGrid!=-2)
+        ga.transform.DOMove(grids[12].transform.position, 0.3f).SetEase(Ease.InOutSine);
+        c.SetCurrentGrid(12);
+        LevelManager.Instance.SetGridBusy(12);
+
+
+        if (totalSpawnedNumberYellow != SpawnLimitYellow)
         {
-
-
-            ga.transform.DOMove(grids[12].transform.position, 0.25f).SetEase(Ease.InOutSine);
-
-            c.SetCurrentGrid(12);
-            LevelManager.Instance.SetGridBusy(12);
-
-
-            //}
+            GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
             newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 1f).OnComplete(() => CreateYellowCar(spawnPosYellow2.position));
 
-            //MoveManager.Instance.moveTheCar(ga);
-            MoveManager.Instance.MoveTheCar(ga);
-
         }
+        MoveManager.Instance.MoveTheCar(ga);
 
     }
 
-    private void HandlePurpleMovement(float fl)
-    {
-        StartCoroutine(doFirstMoveForWaitingPurple(fl));
-        
-        //CreateYellowCar(spawnPosPurple2.transform.position);
-
-
-    }
+        private void HandlePurpleMovement(float fl)
+        {
+             StartCoroutine(doFirstMoveForWaitingPurple(fl));
+        }
 
     private IEnumerator doFirstMoveForWaitingPurple(float fl)
     {
-        yield return new WaitForSeconds(fl);
 
-        GameObject ga = carsInPurpleLine.Dequeue();
-        GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
-        List<GameObject> grids = LevelManager.Instance.GetGridList();
-        List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
+            yield return new WaitForSeconds(fl);
 
-       // if (gridStatuses[11])
-        //{
-            //ga.transform.DOMove(ga.transform.position, 0f).SetDelay(fl);
-            ga.transform.DOMove(grids[11].transform.position, 0.25f).SetEase(Ease.InOutSine);
+            GameObject ga = carsInPurpleLine.Dequeue();
+            List<GameObject> grids = LevelManager.Instance.GetGridList();
+            List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
 
+            ga.transform.DOMove(grids[14].transform.position, 0.3f).SetEase(Ease.InOutSine);
             Car c = ga.GetComponent<Car>();
-            c.SetCurrentGrid(11);
-            LevelManager.Instance.SetGridBusy(11);
+            c.SetCurrentGrid(14);
+            LevelManager.Instance.SetGridBusy(14);
 
-       // }
-        newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
-        //MoveManager.Instance.moveTheCar(ga);
+        if (totalSpawnedNumberPurple!= SpawnLimitPurple)
+        {
+            GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
+            newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
+        }
+
         MoveManager.Instance.MoveTheCar(ga);
-
-
-
 
     }
 
     private void CreateYellowCar(Vector3 vec)
     {
-        GameObject g = Instantiate(yellowCarPrefab, vec, Quaternion.identity);
-        g.transform.Rotate(new Vector3(-90, 180, 0));
-        Car c = g.GetComponent<Car>();
-        c.SetCurrentGrid(-1);
-        carsInYellowLine.Enqueue(g);
+        if (totalSpawnedNumberYellow< SpawnLimitYellow)
+        {
+
+            GameObject g = Instantiate(yellowCarPrefab, vec, Quaternion.identity);
+
+            g.transform.Rotate(new Vector3(-90, 180, 0));
+            Car c = g.GetComponent<Car>();
+            c.SetCurrentGrid(-1);
+            carsInYellowLine.Enqueue(g);
+
+            totalSpawnedNumberYellow += 1;
+            GameManager.Instance.AddSpawnedCarsList(g);
+
+        }
 
     }
 
     private void CreatePurpleCar(Vector3 vec)
     {
+       if (totalSpawnedNumberPurple<SpawnLimitPurple)
+        {
+            GameObject gg = Instantiate(purpleCarPrefab, vec, Quaternion.identity);
 
-        GameObject gg = Instantiate(purpleCarPrefab, vec, Quaternion.identity);
-        gg.transform.Rotate(new Vector3(-90, 180, 0));
-        Car c = gg.GetComponent<Car>();
-        c.SetCurrentGrid(-1);
-        carsInPurpleLine.Enqueue(gg);
+            gg.transform.Rotate(new Vector3(-90, 180, 0));
+            Car c = gg.GetComponent<Car>();
+            c.SetCurrentGrid(-1);
+            carsInPurpleLine.Enqueue(gg);
+
+            totalSpawnedNumberPurple += 1;
+            GameManager.Instance.AddSpawnedCarsList(gg);
+        }
     }
 
 

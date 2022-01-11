@@ -10,24 +10,25 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] GameObject[] carPrefabs;
     [SerializeField] List<GameObject> grids;
     [SerializeField] List<Material> materialsForGrids;
-    LinkedList<GameObject> Path;
+    [SerializeField] Material firstColorMat;
+    [SerializeField] Material secondColorMat;
+
+
     Graph gr;
     private List<bool> isGridFree;
 
-    // Start is called before the first frame update
-
+    [SerializeField]private List<string> gridColors;
 
 
      void Start()
     {
-        //gameObject.AddComponent<Graph>();
-        //LinkedList<GameObject> Path = new LinkedList<GameObject>();
+
         gr = new Graph();
         isGridFree = new List<bool>();
-
+       
+        /*
         for (int i = 0; i < gr.adjacencyList.Length; i++)
         {
-            /////LinkedList<int> arr = adj[i];
             List<int> arr = gr.adjacencyList[i];
             Debug.Log("head" + i);
             for (int k = 0; k < arr.Count; k++)
@@ -35,41 +36,35 @@ public class LevelManager : Singleton<LevelManager>
                 Debug.Log(arr[k]);
             }
 
+        }*/
+
+        for (int i = 0; i < gridColors.Count; i++)
+        {
+            Debug.Log(gridColors[i].ToString());
+            if (gridColors[i]=="F") //first color option, which is purple for this level
+            {
+                grids[i].GetComponent<Renderer>().material = firstColorMat;
+ 
+            }
+
+            else if (gridColors[i] == "S") // second color option, which is yellow for this level
+            {
+                grids[i].GetComponent<Renderer>().material = secondColorMat;
+
+            }
         }
             for (int i = 0; i < grids.Count; i++)
         {
-            //Material mat = grids[i].GetComponent<MeshRenderer>().material;
-            if (i<materialsForGrids.Count)
-            {
-
-
-                grids[i].GetComponent<Renderer>().material = materialsForGrids[i];
-            }
             isGridFree.Add(true);
-
-            //grids[i].gameObject.ma
-            //mat = materialsForGrids[i];
         }
 
-        //isGridFree[11] = false;
-        //isGridFree[12] = false;
-
-
-        /*
-    for (int i = 0; i < carPrefabs.Length; i++)
-    {
-        //Car c = new Car();
-        GameObject g =Instantiate(carPrefabs[i],new Vector3(-29.5f,-9,20),Quaternion.identity);
-        g.transform.Rotate(new Vector3(-90,180,0));
-        g.transform.DOMove(grids[i].transform.position,1f).SetEase(Ease.InOutSine);
-        //c.GoTargetPosition(grids[i].transform.position);
-    }*/
+  
     }
 
-    // Update is called once per frame
-    void Update()
+    public string GetColorOfGrid(int i)
     {
-        
+
+        return gridColors[i];
     }
     public void SetGridFree(int i)
     {
@@ -98,6 +93,12 @@ public class LevelManager : Singleton<LevelManager>
     {
         return gr.adjacencyList;
 
+    }
+
+    public Material GetGridMaterial(int i)
+    {
+
+        return materialsForGrids[i];
     }
 
 }

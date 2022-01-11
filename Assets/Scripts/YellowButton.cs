@@ -17,19 +17,11 @@ public class YellowButton : MonoBehaviour
     private bool gateAlreadyOpened = false;
     public static Action<float> yellowObstacleOpened;
 
-    // Start is called before the first frame update
     void Start()
     {
         GameObject  Parent_ = transform.parent.gameObject;
         anim = Parent_.GetComponent<Animator>();
         yellowObstacleAnim = yellowObstacle.GetComponent<Animator>();
-        
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 
@@ -40,32 +32,24 @@ public class YellowButton : MonoBehaviour
 
             gateAlreadyOpened = true;
             anim.SetBool("ButtonClicked", true);
-            yellowObstacleAnim.SetBool("ButtonClicked", true);
 
+            yellowObstacleAnim.SetBool("ButtonClicked", true);
             yellowObstacleOpened.Invoke(obstacleOpeningAnim.length);
-            //Invoke("endTheAnimation", buttonClickedAnim.length - 0.5f);
 
             Invoke("EndClickAnimation", buttonClickedAnim.length - 0.5f);
             Invoke("EndObstacleAnimation", obstacleOpeningAnim.length + 0.1f);
 
 
         }
-        //((Invoke("endTheAnimation",anim.GetCurrentAnimatorStateInfo(0).clip.length);
-
-
     }
 
     private void EndClickAnimation()
     {
-
         anim.SetBool("ButtonClicked",false);
-        
-
     }
 
     private void EndObstacleAnimation()
     {
-
         yellowObstacleAnim.SetBool("ButtonClicked", false);
         gateAlreadyOpened = false;
     }
