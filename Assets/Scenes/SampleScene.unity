@@ -1554,6 +1554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aece3cdb4bc3343bbb1d4a58430ee0ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimeForOneUnit: 0.4
   carPrefabs:
   - {fileID: 298774007582666136, guid: 310e63a9f9ecf44199ec08f2dfcf99e3, type: 3}
   - {fileID: 1006403204355993263, guid: ebcac335efe9b47919e2ca8718187e4e, type: 3}

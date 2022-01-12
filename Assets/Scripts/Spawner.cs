@@ -6,8 +6,9 @@ using System;
 
 public class Spawner : Singleton<Spawner>
 {
+    public static Action reachedToTotalNumberOfCarLimit;
 
-    //butona basmayı dinle observerla 
+
     [SerializeField] private Transform spawnPosYellow;
     [SerializeField] private Transform spawnPosYellow2;
 
@@ -20,21 +21,19 @@ public class Spawner : Singleton<Spawner>
     [SerializeField] private int SpawnLimitPurple;
 
 
-
     private int totalSpawnedNumberPurple;
     private int totalSpawnedNumberYellow;
 
     private Queue<GameObject> carsInYellowLine;
     private Queue<GameObject> carsInPurpleLine;
 
-    public static Action reachedToTotalNumberOfCarLimit;
    
     void Start()
     {
 
+        
         totalSpawnedNumberPurple = 0;
         totalSpawnedNumberYellow = 0;
-
 
 
         carsInYellowLine = new Queue<GameObject>();
@@ -49,18 +48,6 @@ public class Spawner : Singleton<Spawner>
   
     }
 
-    bool notFinishedYet = true;
-    void Update()
-    {
-        /*
-        if (totalSpawnedNumberYellow==SpawnLimitYellow && totalSpawnedNumberPurple==SpawnLimitPurple&&notFinishedYet)
-        {
-            reachedToTotalNumberOfCarLimit.Invoke();
-            notFinishedYet = false;
-        }*/
-    }
-
- 
 
 
     private void OnEnable()
@@ -84,13 +71,10 @@ public class Spawner : Singleton<Spawner>
     {
         yield return new WaitForSeconds(fl);
         
-
-        
-        GameObject ga = carsInYellowLine.Dequeue();
-        
         List<GameObject> grids = LevelManager.Instance.GetGridList();
         List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
 
+        GameObject ga = carsInYellowLine.Dequeue();
 
         Car c = ga.GetComponent<Car>();
         ga.transform.DOMove(grids[12].transform.position, 0.3f).SetEase(Ease.InOutSine);
@@ -99,17 +83,11 @@ public class Spawner : Singleton<Spawner>
 
        
          if (totalSpawnedNumberYellow != SpawnLimitYellow)
-        {
+         {
             GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
             newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 1f).OnComplete(() => CreateYellowCar(spawnPosYellow2.position));
+         }
 
-        }
-        /*
-        else
-        {
-            GameObject newHeadOfWaitLineYellow = carsInYellowLine.Peek();
-            newHeadOfWaitLineYellow.transform.DOMove(spawnPosYellow.position, 0.2f);
-        }*/
         MoveManager.Instance.MoveTheCar(ga);
 
     }
@@ -123,31 +101,26 @@ public class Spawner : Singleton<Spawner>
     {
 
             yield return new WaitForSeconds(fl);
-
-            GameObject ga = carsInPurpleLine.Dequeue();
             List<GameObject> grids = LevelManager.Instance.GetGridList();
             List<bool> gridStatuses = LevelManager.Instance.GetGridStatusList();
 
+             GameObject ga = carsInPurpleLine.Dequeue();
+     
             ga.transform.DOMove(grids[14].transform.position, 0.3f).SetEase(Ease.InOutSine);
+
             Car c = ga.GetComponent<Car>();
             c.SetCurrentGrid(14);
             LevelManager.Instance.SetGridBusy(14);
 
-     
-         if (totalSpawnedNumberPurple!= SpawnLimitPurple)
-        {
-            GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
-            newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
-        }
-        /*
-        else
-        {
-            GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
-            newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 0.2f);
-        }*/
+            if (totalSpawnedNumberPurple!= SpawnLimitPurple)
+            {
 
-        MoveManager.Instance.MoveTheCar(ga);
-
+             GameObject newHeadOfWaitLinePurple = carsInPurpleLine.Peek();
+             newHeadOfWaitLinePurple.transform.DOMove(spawnPosPurple.position, 1f).OnComplete(() => CreatePurpleCar(spawnPosPurple2.position));
+         
+            }
+       
+            MoveManager.Instance.MoveTheCar(ga);
     }
 
     private void CreateYellowCar(Vector3 vec)
@@ -164,6 +137,10 @@ public class Spawner : Singleton<Spawner>
 
             totalSpawnedNumberYellow += 1;
             GameManager.Instance.AddSpawnedCarsList(g);
+            if (carsInYellowLine.Count == 1 & totalSpawnedNumberYellow > 2)
+            {
+                g.transform.DOMove(spawnPosYellow.position, 1f);
+            }
 
         }
 
@@ -182,6 +159,10 @@ public class Spawner : Singleton<Spawner>
 
             totalSpawnedNumberPurple += 1;
             GameManager.Instance.AddSpawnedCarsList(gg);
+            if (carsInPurpleLine.Count==1 &totalSpawnedNumberPurple>2)
+            {
+                gg.transform.DOMove(spawnPosPurple.position, 1f);
+            }
         }
     }
 

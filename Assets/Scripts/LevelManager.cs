@@ -6,13 +6,12 @@ using DG.Tweening;
 
 public class LevelManager : Singleton<LevelManager>
 {
-
+    [SerializeField] float TimeForOneUnit;
     [SerializeField] GameObject[] carPrefabs;
     [SerializeField] List<GameObject> grids;
     [SerializeField] List<Material> materialsForGrids;
     [SerializeField] Material firstColorMat;
     [SerializeField] Material secondColorMat;
-
 
     Graph gr;
     private List<bool> isGridFree;
@@ -106,6 +105,11 @@ public class LevelManager : Singleton<LevelManager>
     {
 
         return materialsForGrids[i];
+    }
+
+    public float GetTimeForOneUnit()
+    {
+        return TimeForOneUnit;
     }
 
 }

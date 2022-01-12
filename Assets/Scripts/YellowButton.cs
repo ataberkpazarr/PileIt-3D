@@ -6,15 +6,12 @@ public class YellowButton : MonoBehaviour
 {
     [SerializeField] AnimationClip buttonClickedAnim;
     [SerializeField] AnimationClip obstacleOpeningAnim;
-
-
     [SerializeField]private GameObject yellowObstacle;
-
 
     private Animator anim;
     private Animator yellowObstacleAnim;
-
     private bool gateAlreadyOpened = false;
+
     public static Action<float> yellowObstacleOpened;
 
     void Start()

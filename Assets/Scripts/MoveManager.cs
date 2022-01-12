@@ -10,12 +10,15 @@ public class MoveManager : Singleton<MoveManager>
     public static Action checkIfGameEnded;
 
     public List<int>[] adjacencyList;
-    List<GameObject> grids;
+    private List<GameObject> grids;
+    private float durationForOneUnit;
+
 
     void Start()
     {
         adjacencyList = LevelManager.Instance.GetAdjacencyList();
         grids = LevelManager.Instance.GetGridList();
+        durationForOneUnit = LevelManager.Instance.GetTimeForOneUnit();
     }
 
 
@@ -23,18 +26,19 @@ public class MoveManager : Singleton<MoveManager>
     {
 
          Car c = car_.GetComponent<Car>();
-         int firstAvaliableAdjOfCurrentPosition = GetFreeAdjOf(c.currentGrid);
+         int firstAvaliableAdjOfCurrentPosition = GetFreeAdjOf(c.GetCurrentGrid());
 
         if(firstAvaliableAdjOfCurrentPosition != -2) 
         {
             Vector3 target = grids[firstAvaliableAdjOfCurrentPosition].transform.position;
 
-            LevelManager.Instance.SetGridFree(c.currentGrid);
-            c.currentGrid = firstAvaliableAdjOfCurrentPosition;
+            LevelManager.Instance.SetGridFree(c.GetCurrentGrid());
+
+            c.SetCurrentGrid(firstAvaliableAdjOfCurrentPosition);
             LevelManager.Instance.SetGridBusy(firstAvaliableAdjOfCurrentPosition);
 
-            car_.transform.DORotateQuaternion(grids[firstAvaliableAdjOfCurrentPosition].transform.rotation*Quaternion.Euler(0,180,180), 0.4f).SetEase(Ease.InOutSine);
-            car_.transform.DOMove(target, 0.4f).OnComplete(() => MoveTheCar(car_)).SetEase(Ease.InOutSine);
+            car_.transform.DORotateQuaternion(grids[firstAvaliableAdjOfCurrentPosition].transform.rotation*Quaternion.Euler(0,180,180), durationForOneUnit).SetEase(Ease.InOutSine);//required rotation for the movement
+            car_.transform.DOMove(target, durationForOneUnit).OnComplete(() => MoveTheCar(car_)).SetEase(Ease.InOutSine); // movement
 
         }
 
@@ -45,18 +49,18 @@ public class MoveManager : Singleton<MoveManager>
     
     }
 
-    private IEnumerator LastCheckRoutine(GameObject car_)
+    private IEnumerator LastCheckRoutine(GameObject car_) // check the again before activating tick, if it stucked somewhere or not
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.4f);
 
         Car c = car_.GetComponent<Car>();
 
-        if (GetFreeAdjOf(c.currentGrid) != -2)
+        if (GetFreeAdjOf(c.GetCurrentGrid()) != -2)
         {
             MoveTheCar(car_);
         }
 
-        else if (GetFreeAdjOf(c.currentGrid) == -2)
+        else if (GetFreeAdjOf(c.GetCurrentGrid()) == -2)
         {
 
             CheckIfCarEndedAtTrueColor(car_,c);
@@ -66,7 +70,7 @@ public class MoveManager : Singleton<MoveManager>
 
     private void CheckIfCarEndedAtTrueColor(GameObject car_,Car c)
     {
-        if (car_.gameObject.tag == "SecondColor" && LevelManager.Instance.GetColorOfGrid(c.currentGrid) == "S")
+        if (car_.gameObject.tag == "SecondColor" && LevelManager.Instance.GetColorOfGrid(c.GetCurrentGrid()) == "S")
         {
             GameObject tick = car_.transform.GetChild(0).gameObject;
             if (c.currentGrid == 1)
@@ -78,7 +82,7 @@ public class MoveManager : Singleton<MoveManager>
             checkIfGameEnded?.Invoke();
         }
 
-        else if (car_.gameObject.tag == "FirstColor" && LevelManager.Instance.GetColorOfGrid(c.currentGrid) == "F")
+        else if (car_.gameObject.tag == "FirstColor" && LevelManager.Instance.GetColorOfGrid(c.GetCurrentGrid()) == "F")
         {
 
             GameObject tick = car_.transform.GetChild(0).gameObject;
@@ -116,7 +120,7 @@ public class MoveManager : Singleton<MoveManager>
             }
         }
 
-        return -2;
+        return -2; // if no free adj then return -2
     }
 
     

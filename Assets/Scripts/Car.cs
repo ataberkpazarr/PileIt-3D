@@ -11,4 +11,9 @@ public class Car : MonoBehaviour
         currentGrid = g;
     }
 
+    public int GetCurrentGrid()
+    {
+        return currentGrid;
+    }
+
 }

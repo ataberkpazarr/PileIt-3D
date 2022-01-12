@@ -15,18 +15,11 @@ public class PurpleButton : MonoBehaviour
     private bool gateAlreadyOpened = false;
     public static Action <float>purpleObstacleOpened;
 
-    // Start is called before the first frame update
     void Start()
     {
         GameObject Parent_ = transform.parent.gameObject;
         anim = Parent_.GetComponent<Animator>();
         purpleObstacleAnim = purpleObstacle.GetComponent<Animator>();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 
@@ -45,8 +38,6 @@ public class PurpleButton : MonoBehaviour
             Invoke("EndObstacleAnimation", obstacleOpeningAnim.length+0.1f);
 
         }
-        //((Invoke("endTheAnimation",anim.GetCurrentAnimatorStateInfo(0).clip.length);
-
 
     }
 
